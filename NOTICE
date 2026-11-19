@@ -1,0 +1,10 @@
+CLA Assistant Lite (DIVMORA fork)
+
+This product is a modified version of CLA Assistant GitHub Action
+(https://github.com/contributor-assistant/github-action), originally
+developed by the CLA Assistant contributors and licensed under the
+Apache License, Version 2.0.
+
+Modifications Copyright 2026 DIVMORA Technologies:
+- Runtime updated from Node.js 20 to Node.js 24.
+- dist/ rebuilt from upstream source.

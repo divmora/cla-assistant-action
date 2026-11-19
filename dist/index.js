@@ -360,7 +360,7 @@ function updateFile(sha, claFileContent, reactedCommitters) {
                 ? input
                     .getSignedCommitMessage()
                     .replace('$contributorName', github_1.context.actor)
-                    // .replace('$pullRequestNo', pullRequestNo.toString())
+                    .replace('$pullRequestNo', pullRequestNo.toString())
                     .replace('$owner', owner)
                     .replace('$repo', repo)
                 : `@${github_1.context.actor} has signed the CLA in ${owner}/${repo}#${pullRequestNo}`,

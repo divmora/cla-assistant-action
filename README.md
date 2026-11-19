@@ -1,10 +1,11 @@
-![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
 
 
-> [!IMPORTANT]
-> **This repository is no longer actively maintained.** I no longer have the bandwidth to maintain this project. The repository has been archived and is now read-only. 
+> [!NOTE]
+> **DIVMORA fork.** This is a maintained fork of the archived [contributor-assistant/github-action](https://github.com/contributor-assistant/github-action), used by DIVMORA Technologies' CLA workflow. Changes in this fork:
+> - Runs on Node.js 24 (`runs.using: node24`).
+> - `dist/` rebuilt from source, which includes the upstream `$pullRequestNo` commit-message fix that was never released.
 >
-> You are welcome to **fork this repository** and continue development independently. All existing releases remain functional. Thank you to all contributors and users for your support over the years.
+> Use it as `divmora/cla-assistant-action@v3.0.0`. Original work © the CLA Assistant contributors, licensed under Apache-2.0.
 
 # Handling CLAs and DCOs via GitHub Action
 
