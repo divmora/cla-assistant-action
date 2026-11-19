@@ -64,8 +64,8 @@ async function getCLAFileContentandSHA(
   try {
     result = await getFileContent()
   } catch (error) {
-    if (error.status === "404") {
-      return createClaFileAndPRComment(committers, committerMap)
+    if (String(error.status) === '404') {
+      return createClaFile()
     } else {
       throw new Error(
         `Could not retrieve repository contents. Status: ${
@@ -80,34 +80,29 @@ async function getCLAFileContentandSHA(
   return { claFileContent, sha }
 }
 
-async function createClaFileAndPRComment(
-  committers: CommittersDetails[],
-  committerMap: CommitterMap
-): Promise<void> {
-  committerMap.notSigned = committers
-  committerMap.signed = []
-  committers.map(committer => {
-    if (!committer.id) {
-      committerMap.unknown.push(committer)
-    }
-  })
-
+// Creates the signatures file on the first run, then hands back its content so
+// the normal check continues. (Upstream always failed the run here, even when
+// every committer was allowlisted or a bot.)
+async function createClaFile(): Promise<ClafileContentAndSha> {
   const initialContent = { signedContributors: [] }
   const initialContentString = JSON.stringify(initialContent, null, 3)
   const initialContentBinary =
     Buffer.from(initialContentString).toString('base64')
 
-  await createFile(initialContentBinary).catch(error =>
-    core.setFailed(
+  let response
+  try {
+    response = await createFile(initialContentBinary)
+  } catch (error) {
+    throw new Error(
       `Error occurred when creating the signed contributors file: ${
         error.message || error
       }. Make sure the branch where signatures are stored is NOT protected.`
     )
-  )
-  await prCommentSetup(committerMap, committers)
-  throw new Error(
-    `Committers of pull request ${context.issue.number} have to sign the CLA`
-  )
+  }
+  return {
+    claFileContent: initialContent,
+    sha: response?.data?.content?.sha
+  }
 }
 
 function prepareCommiterMap(

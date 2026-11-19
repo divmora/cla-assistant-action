@@ -8,3 +8,4 @@ Apache License, Version 2.0.
 Modifications Copyright 2026 DIVMORA Technologies:
 - Runtime updated from Node.js 20 to Node.js 24.
 - dist/ rebuilt from upstream source.
+- First-run signatures-file creation no longer fails the check (v3.0.1).

@@ -981,8 +981,8 @@ function getCLAFileContentandSHA(committers, committerMap) {
             result = yield (0, persistence_1.getFileContent)();
         }
         catch (error) {
-            if (error.status === "404") {
-                return createClaFileAndPRComment(committers, committerMap);
+            if (String(error.status) === '404') {
+                return createClaFile();
             }
             else {
                 throw new Error(`Could not retrieve repository contents. Status: ${error.status || 'unknown'}`);
@@ -994,21 +994,26 @@ function getCLAFileContentandSHA(committers, committerMap) {
         return { claFileContent, sha };
     });
 }
-function createClaFileAndPRComment(committers, committerMap) {
+// Creates the signatures file on the first run, then hands back its content so
+// the normal check continues. (Upstream always failed the run here, even when
+// every committer was allowlisted or a bot.)
+function createClaFile() {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        committerMap.notSigned = committers;
-        committerMap.signed = [];
-        committers.map(committer => {
-            if (!committer.id) {
-                committerMap.unknown.push(committer);
-            }
-        });
         const initialContent = { signedContributors: [] };
         const initialContentString = JSON.stringify(initialContent, null, 3);
         const initialContentBinary = Buffer.from(initialContentString).toString('base64');
-        yield (0, persistence_1.createFile)(initialContentBinary).catch(error => core.setFailed(`Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`));
-        yield (0, pullRequestComment_1.default)(committerMap, committers);
-        throw new Error(`Committers of pull request ${github_1.context.issue.number} have to sign the CLA`);
+        let response;
+        try {
+            response = yield (0, persistence_1.createFile)(initialContentBinary);
+        }
+        catch (error) {
+            throw new Error(`Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`);
+        }
+        return {
+            claFileContent: initialContent,
+            sha: (_b = (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.content) === null || _b === void 0 ? void 0 : _b.sha
+        };
     });
 }
 function prepareCommiterMap(committers, claFileContent) {

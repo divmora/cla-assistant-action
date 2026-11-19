@@ -4,8 +4,9 @@
 > **DIVMORA fork.** This is a maintained fork of the archived [contributor-assistant/github-action](https://github.com/contributor-assistant/github-action), used by DIVMORA Technologies' CLA workflow. Changes in this fork:
 > - Runs on Node.js 24 (`runs.using: node24`).
 > - `dist/` rebuilt from source, which includes the upstream `$pullRequestNo` commit-message fix that was never released.
+> - v3.0.1: the first run in a repository (when the signatures file is created) no longer always fails; the normal check continues.
 >
-> Use it as `divmora/cla-assistant-action@v3.0.0`. Original work © the CLA Assistant contributors, licensed under Apache-2.0.
+> Use it as `divmora/cla-assistant-action@v3`. Original work © the CLA Assistant contributors, licensed under Apache-2.0.
 
 # Handling CLAs and DCOs via GitHub Action
 
